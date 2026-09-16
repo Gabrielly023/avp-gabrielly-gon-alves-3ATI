@@ -10,19 +10,41 @@ export default function Login() {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
-  function handleLogin(event) {
+  async function handleLogin(event) {
     // TODO: impedir o comportamento padrão do formulário.
     event.preventDefault(); // Preparação mínima: a página não recarrega durante a aula.
     // TODO: limpar mensagem de erro anterior.
+    setError("")
     // TODO: validar se email e password foram preenchidos.
+    if(!email || !password){
+      setError("Preencha todos os campos")
+      return;
+    }
+
+    try{
+
     // TODO: ativar loading.
+    setLoading(true)
     // TODO: chamar POST /auth/login usando api.post.
     // TODO: enviar email e password no body.
+    const resposta = await api.post("/auth/login", { email, password });
+    console.log(resposta)
     // TODO: pegar o token retornado pelo backend.
+    const token = resposta.data.token;
     // TODO: salvar o token usando saveToken.
+    saveToken(token);
     // TODO: redirecionar para /protegida usando useNavigate.
+    navigate("/protegida");
+    }catch{
+      const message = error.response.data?.message || "Erro ao cadastrar Login";
+
+      setError(message);
     // TODO: mostrar mensagem de erro se o login falhar.
-    // TODO: desativar loading no final.
+    }finally{
+      // TODO: desativar loading no final.
+      setLoading(false);
+    }
+    
     // O backend retorna um token JWT. O frontend precisa guardá-lo para as próximas requisições.
     // Dica: use try/catch/finally para separar sucesso, erro e loading.
   }
