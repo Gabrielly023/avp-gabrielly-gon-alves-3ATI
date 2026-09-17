@@ -22,22 +22,20 @@ export default function ProtectedPage() {
     setLoading(true)
     // TODO: chamar GET /users/profile usando api.get.
     // TODO: enviar o token no header Authorization no formato Bearer TOKEN.
-    const resposta = await api.get("users/profile",{
+    const resposta = await api.get("/users/profile",{
       headers: {
         Authorization: `Bearer ${token}`
       }
     });
     // TODO: salvar os dados do usuário no estado user.
     setUser(resposta.data.user);
-    } catch{
-    // TODO: se o token for inválido, remover token e redirecionar para /login.
-    removerToken();
-    // TODO: mostrar mensagem de erro se acontecer algum problema.
-     const message = error.response.data?.message || "Sessão invalida. Faça Login novamente";
+    } catch (err) {
+    // TODO: se o token for inválido, remover token e redirecionar para /login
+      removeToken();
+      
+      const message = err.response?.data?.message || "Sessão invalida. Faça Login novamente";
 
       setError(message);
-
-      navigate("/login");
 
     }finally{
       // TODO: desativar loading no final.
@@ -60,10 +58,10 @@ export default function ProtectedPage() {
   }, []);
 
   return (
-    <main className="flex min-h-screen items-center justify-center bg-gray-100 px-4 py-8">
+    <main className="flex min-h-screen items-center justify-center bg-gradient-to-br from-purple-600 via-pink-500 to-orange-400 px-4 py-8">
       <section className="w-full max-w-lg rounded-xl bg-white p-6 shadow-md sm:p-8">
         <h1 className="mb-4 text-center text-2xl font-bold text-gray-900">Área Protegida</h1>
-        <p role="status" className="mb-5 rounded-md bg-green-50 p-3 text-center text-green-700">Login realizado com sucesso</p>
+        <p role="status" className="mb-5 rounded-md bg-purple-50 p-3 text-center text-purple-700">Login realizado com sucesso</p>
 
         {loading && <p role="status" className="mb-4 text-gray-600">Carregando perfil...</p>}
         {error && <p role="alert" className="mb-4 text-red-600">{error}</p>}
@@ -75,7 +73,7 @@ export default function ProtectedPage() {
           <p><strong>Email:</strong> {user?.email ?? "Aguardando perfil"}</p>
         </div>
 
-        <button type="button" onClick={handleLogout} className="w-full rounded-md bg-blue-600 px-4 py-2 font-semibold text-white hover:bg-blue-700">
+        <button type="button" onClick={handleLogout} className="w-full rounded-md bg-purple-600 px-4 py-2 font-semibold text-white hover:bg-purple-800">
           Sair
         </button>
       </section>

@@ -35,10 +35,11 @@ export default function Login() {
     saveToken(token);
     // TODO: redirecionar para /protegida usando useNavigate.
     navigate("/protegida");
-    }catch{
-      const message = error.response.data?.message || "Erro ao cadastrar Login";
+    }catch (err) {
+      const message = err.response?.data?.message || "Erro ao fazer Login";
 
       setError(message);
+      
     // TODO: mostrar mensagem de erro se o login falhar.
     }finally{
       // TODO: desativar loading no final.
@@ -50,7 +51,7 @@ export default function Login() {
   }
 
   return (
-    <main className="flex min-h-screen items-center justify-center bg-gray-100 px-4 py-8">
+    <main className="flex min-h-screen items-center justify-center bg-gradient-to-br from-purple-600 via-pink-500 to-orange-400 px-4 py-8">
       <section className="w-full max-w-md rounded-xl bg-white p-6 shadow-md sm:p-8">
         <h1 className="mb-6 text-center text-2xl font-bold text-gray-900">Entrar</h1>
 
@@ -66,13 +67,13 @@ export default function Login() {
 
           {error && <p role="alert" className="text-sm text-red-600">{error}</p>}
 
-          <button type="submit" disabled={loading} className="w-full rounded-md bg-blue-600 px-4 py-2 font-semibold text-white hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-60">
+          <button type="submit" disabled={loading} className="w-full rounded-md bg-pink-600 px-4 py-2 font-semibold text-white hover:bg-pink-700 disabled:cursor-not-allowed disabled:opacity-60">
             {loading ? "Entrando..." : "Entrar"}
           </button>
         </form>
 
         <p className="mt-5 text-center text-sm text-gray-600">
-          Ainda não tem conta? <Link to="/register" className="font-medium text-blue-600 hover:underline">Criar conta</Link>
+          Ainda não tem conta? <Link to="/register" className="font-medium text-pink-700 hover:underline">Criar conta</Link>
         </p>
       </section>
     </main>

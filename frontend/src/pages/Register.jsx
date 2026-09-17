@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import api from "../services/api.js";
 
 export default function Register() {
@@ -9,42 +9,43 @@ export default function Register() {
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
 
   async function handleRegister(event) {
-    
-    event.preventDefault(); 
-    setError("")
-    setSuccess("")
-    
-    if(!name || !email || !password){
-      setError("Preencha todos os campos")
+    event.preventDefault();
+    setError("");
+    setSuccess("");
+
+    if (!name || !email || !password) {
+      setError("Preencha todos os campos");
       return;
     }
-    try{
-    
-      setLoading(true)
 
-      await api.post("/auth/register", {name, email, password});
+    try {
+      setLoading(true);
 
-      setSuccess("Cadastro Realizado com sucesso");
+      await api.post("/auth/register", { name, email, password });
 
-      setName("")
-      setEmail("")
-      setPassword("")
-    } catch(error) {
-      const message = error.response.data?.message || "Erro ao cadastrar usuário";
+      setSuccess("Cadastro realizado com sucesso! Redirecionando...");
 
+      setName("");
+      setEmail("");
+      setPassword("");
+
+      setTimeout(() => {
+        navigate("/login", { state: { message: "Conta criada com sucesso! Faça login." } });
+      }, 1500);
+
+    } catch (err) {
+      const message = err.response?.data?.message || "Erro ao cadastrar usuário";
       setError(message);
     } finally {
       setLoading(false);
     }
-   
-
-    
   }
 
   return (
-    <main className="flex min-h-screen items-center justify-center bg-gray-100 px-4 py-8">
+    <main className="flex min-h-screen items-center justify-center bg-gradient-to-br from-purple-600 via-pink-500 to-orange-400 px-4 py-8">
       <section className="w-full max-w-md rounded-xl bg-white p-6 shadow-md sm:p-8">
         <h1 className="mb-6 text-center text-2xl font-bold text-gray-900">Criar conta</h1>
 
@@ -65,13 +66,13 @@ export default function Register() {
           {error && <p role="alert" className="text-sm text-red-600">{error}</p>}
           {success && <p role="status" className="text-sm text-green-600">{success}</p>}
 
-          <button type="submit" disabled={loading} className="w-full rounded-md bg-blue-600 px-4 py-2 font-semibold text-white hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-60">
+          <button type="submit" disabled={loading} className="w-full rounded-md bg-pink-600 px-4 py-2 font-semibold text-white hover:bg-pink-700 disabled:cursor-not-allowed disabled:opacity-60">
             {loading ? "Cadastrando..." : "Cadastrar"}
           </button>
         </form>
 
         <p className="mt-5 text-center text-sm text-gray-600">
-          Já tem conta? <Link to="/login" className="font-medium text-blue-600 hover:underline">Entrar</Link>
+          Já tem conta? <Link to="/login" className="font-medium text-pink-700 hover:underline">Entrar</Link>
         </p>
       </section>
     </main>
